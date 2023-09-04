@@ -4,9 +4,8 @@
   "description": "\"This api habdles different kinds of written contents\"",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js",
-    "dev": "nodemon app",
-    "prod": "export NODE_ENV=production && nodemon app.js"
+    "start": "SET NODE_ENV=production & node app.js",
+    "dev": "nodemon app"
   },
   "author": "Darío Semino",
   "license": "ISC",
