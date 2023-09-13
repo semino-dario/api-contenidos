@@ -54,8 +54,11 @@ const limiter = rateLimit({
 app.use(limiter);
 
 //Setup cors // Enable access by other domains
-app.use(cors());
-
+app.use(cors({
+    origin: 'http://localhost:3000',
+    methods: 'GET,POST,PUT,DELETE',
+    credentials: true,
+}));
 //Importing routes
 const articulos = require('./routes/articles');
 const auth = require('./routes/auth');
