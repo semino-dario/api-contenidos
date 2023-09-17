@@ -1,6 +1,7 @@
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 const Article = require('../models/articles');
 const ErrorHandler = require('../utils/errorHandler');
+const path = require('path');
 
 // Get all articles => api/v1/articulos
 
@@ -89,3 +90,57 @@ exports.deleteArticle = catchAsyncErrors(async (req, res, next) => {
     })
 }
 )
+
+// Upload image /api/v1/articule/:id/image
+
+exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
+
+    let article = await Article.findById(req.params.id);
+
+    if (!article) {
+        return next(new ErrorHandler('Artículo no encontrado', 404))
+    }
+
+    //Check the files
+    if (!req.files) {
+        return next(new ErrorHandler('Por favor subir una imagen', 400))
+    }
+
+    const file = req.files.file;
+
+    //Check file type
+
+    const supportedFiles = /.jpg|.png|.webp/;
+
+    if (!supportedFiles.test(path.extname(file.name))) {
+        return next(new ErrorHandler('Por favor subir un archivo de imagen jpg, png o webp', 400))
+    }
+
+    //Check document size
+    if (file.seze > process.env.MAX_FILE_SIZE) {
+        return next(new ErrorHandler("No se admiten arcivhos mayores a 2MB.", 400))
+
+    }
+
+    const imagePath = `${process.env.UPLOAD_PATH}/${file.name}`;
+
+
+    file.mv(`${process.env.UPLOAD_PATH}/${file.name}`, async err => {
+        if (err) {
+            console.log(err)
+            return next(new ErrorHandler('Carga de la imagen falló', 500))
+        }
+
+        // Update the 'image' field of the Article document with the image path
+        article.image = imagePath;
+
+        // Save the updated article document with the image path
+        await article.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'Imagen subida correctamente',
+            data: file.name
+        })
+    })
+})

@@ -5,6 +5,7 @@ const connectDB = require('./config/db')
 const errorMiddleware = require('./middlewares/errorMiddleware')
 const ErrorHandler = require('./utils/errorHandler')
 const cookieParser = require('cookie-parser')
+const fileUpload = require('express-fileupload')
 //Securty mesures
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
@@ -35,6 +36,8 @@ app.use(express.json());
 //Setup cookie parser
 app.use(cookieParser());
 
+//Handle fileuploads
+app.use(fileUpload())
 
 //Sanitize data
 app.use(mongoSanitize());

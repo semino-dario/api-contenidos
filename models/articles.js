@@ -4,18 +4,19 @@ const slugify = require('slugify');
 const articleSchema = new mongoose.Schema({
     title: {
         type: String,
-        required: [true, 'Por favor ingrese un título']
+        required: [true, ' Por favor ingrese un título.']
     },
     content: {
         type: String,
-        required: [true, 'Por favor ingrese contenido']
+        required: [true, ' Por favor ingrese contenido.']
     },
     author: {
         type: String,
-        required: [true, 'Por favor ingrese autor']
+        required: [true, ' Por favor ingrese autor.']
     },
     image: {
         type: String,
+        required: [true, ' Por favor subir una imagen.']
     },
     slug: String,
     tags: {
