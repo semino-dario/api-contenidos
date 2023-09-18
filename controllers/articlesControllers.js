@@ -111,7 +111,7 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
     }
 
     //Check document size
-    if (file.seze > process.env.MAX_FILE_SIZE) {
+    if (file.size > process.env.MAX_FILE_SIZE) {
         return next(new ErrorHandler("No se admiten arcivhos mayores a 2MB.", 400))
 
     }
