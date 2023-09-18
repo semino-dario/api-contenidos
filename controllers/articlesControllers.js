@@ -2,6 +2,8 @@ const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 const Article = require('../models/articles');
 const ErrorHandler = require('../utils/errorHandler');
 const path = require('path');
+const AWS = require("aws-sdk");
+const s3 = new AWS.S3()
 
 // Get all articles => api/v1/articulos
 
@@ -116,8 +118,6 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
 
     }
 
-    const imagePath = `${process.env.UPLOAD_PATH}/${file.name}`;
-
 
     file.mv(`${process.env.UPLOAD_PATH}/${file.name}`, async err => {
         if (err) {
@@ -125,10 +125,36 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
             return next(new ErrorHandler('Carga de la imagen falló', 500))
         }
 
-        res.status(200).json({
-            success: true,
-            message: 'Imagen subida correctamente',
-            data: imagePath
-        })
+        const imagePath = `${process.env.UPLOAD_PATH}/${file.name}`;
+
+        // Upload the image to the S3 bucket
+        const s3Params = {
+            Body: file.data, // Use file.data to get the file content
+            Bucket: "your-s3-bucket-name",
+            Key: `images/${file.name}`, // Specify the desired path in your S3 bucket
+        };
+
+        s3.putObject(s3Params, (err, data) => {
+            if (err) {
+                console.error("Error uploading to S3:", err);
+                return next(new ErrorHandler("Failed to upload image to S3", 500));
+            }
+
+            // Remove the locally stored image after uploading to S3
+            fs.unlinkSync(imagePath);
+
+            // Respond with success message or other data
+            res.status(200).json({
+                success: true,
+                message: "Image uploaded and stored in S3",
+                s3Data: data,
+            });
+        });
+
+        // res.status(200).json({
+        //     success: true,
+        //     message: 'Imagen subida correctamente',
+        //     data: imagePath
+        // })
     })
 })
