@@ -91,15 +91,9 @@ exports.deleteArticle = catchAsyncErrors(async (req, res, next) => {
 }
 )
 
-// Upload image /api/v1/articule/:id/image
+// Upload image /api/v1/articule/image
 
 exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
-
-    let article = await Article.findById(req.params.id);
-
-    if (!article) {
-        return next(new ErrorHandler('Artículo no encontrado', 404))
-    }
 
     //Check the files
     if (!req.files) {
@@ -131,16 +125,10 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
             return next(new ErrorHandler('Carga de la imagen falló', 500))
         }
 
-        // Update the 'image' field of the Article document with the image path
-        article.image = imagePath;
-
-        // Save the updated article document with the image path
-        await article.save();
-
         res.status(200).json({
             success: true,
             message: 'Imagen subida correctamente',
-            data: file.name
+            data: imagePath
         })
     })
 })
