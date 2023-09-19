@@ -58,7 +58,7 @@ app.use(limiter);
 
 //Setup cors // Enable access by other domains
 const corsOptions = {
-    origin: 'http://localhost:3000', // Change this to your frontend URL
+    origin: "*",
     optionsSuccessStatus: 200,
 };
 
