@@ -57,7 +57,12 @@ const limiter = rateLimit({
 app.use(limiter);
 
 //Setup cors // Enable access by other domains
-app.use(cors());
+const corsOptions = {
+    origin: 'http://localhost:3000', // Change this to your frontend URL
+    optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 // app.use(cors({
 //     origin: 'http://localhost:3000',
 //     methods: 'GET,POST,PUT,DELETE',
