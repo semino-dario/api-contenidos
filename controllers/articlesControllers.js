@@ -105,7 +105,6 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
     const file = req.files.File;
     //const imagePath = `${process.env.UPLOAD_PATH}/${file.name}`;
 
-
     console.log(req.files.File)
     //Check file type
 
@@ -121,20 +120,6 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
 
     }
 
-
-    // file.mv(imagePath, async err => {
-    //     if (err) {
-    //         console.log(err)
-    //         return next(new ErrorHandler('Carga de la imagen falló', 500))
-    //     }
-
-    // res.status(200).json({
-    //     success: true,
-    //     message: 'Imagen subida correctamente',
-    //     data: imagePath
-    // })
-    // })
-
     // Specify your bucket name and object key
     const bucketName = "cyclic-lazy-duck-outfit-sa-east-1";
     const objectKey = `images/${file.name}`; // Adjust the key as per your object's location
@@ -143,7 +128,6 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
     const imageUrl = s3.getSignedUrl("getObject", {
         Bucket: bucketName,
         Key: objectKey,
-        Expires: 3600, // The URL will expire in one hour, adjust as needed
     });
 
     console.log("Image URL:", imageUrl);
@@ -161,8 +145,7 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
             return next(new ErrorHandler("Failed to upload image to S3", 500));
         }
 
-        // Remove the locally stored image after uploading to S3
-        //fs.unlinkSync(imagePath);
+
 
         // Respond with success message or other data
         res.status(200).json({
