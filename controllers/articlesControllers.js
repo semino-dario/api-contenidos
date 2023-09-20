@@ -103,7 +103,7 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
     }
 
     const file = req.files.File;
-    const imagePath = `${process.env.UPLOAD_PATH}/${file.name}`;
+    //const imagePath = `${process.env.UPLOAD_PATH}/${file.name}`;
 
 
     console.log(req.files.File)
@@ -135,7 +135,18 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
     // })
     // })
 
+    // Specify your bucket name and object key
+    const bucketName = "cyclic-lazy-duck-outfit-sa-east-1";
+    const objectKey = `images/${file.name}`; // Adjust the key as per your object's location
 
+    // Generate the URL for the image
+    const imageUrl = s3.getSignedUrl("getObject", {
+        Bucket: bucketName,
+        Key: objectKey,
+        Expires: 3600, // The URL will expire in one hour, adjust as needed
+    });
+
+    console.log("Image URL:", imageUrl);
 
     // Upload the image to the S3 bucket
     const s3Params = {
