@@ -101,8 +101,9 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHandler('Por favor subir una imagen', 400))
     }
 
-    const file = req.files.file;
+    const file = req.files.File;
 
+    console.log(req.files.File)
     //Check file type
 
     const supportedFiles = /.jpg|.png|.webp/;
