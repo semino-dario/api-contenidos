@@ -169,6 +169,7 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
             success: true,
             message: "Image uploaded and stored in S3",
             s3Data: data,
+            imageUrl: imageUrl
         });
     });
 
