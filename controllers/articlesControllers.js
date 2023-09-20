@@ -108,9 +108,9 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
 
     const supportedFiles = /.jpg|.png|.webp/;
 
-    // if (!supportedFiles.test(path.extname(file.name))) {
-    //     return next(new ErrorHandler('Por favor subir un archivo de imagen jpg, png o webp', 400))
-    // }
+    if (!supportedFiles.test(path.extname(file.name))) {
+        return next(new ErrorHandler('Por favor subir un archivo de imagen jpg, png o webp', 400))
+    }
 
     //Check document size
     if (file.size > process.env.MAX_FILE_SIZE) {
@@ -119,14 +119,13 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
     }
 
 
-    file.mv(`${process.env.UPLOAD_PATH}/imagen`, async err => {
+    file.mv(`${process.env.UPLOAD_PATH}/${file.name}`, async err => {
         if (err) {
             console.log(err)
             return next(new ErrorHandler('Carga de la imagen falló', 500))
         }
 
-        // const imagePath = `${process.env.UPLOAD_PATH}/${file.name}`;
-        const imagePath = `${process.env.UPLOAD_PATH}/imagen`;
+        const imagePath = `${process.env.UPLOAD_PATH}/${file.name}`;
 
         res.status(200).json({
             success: true,
