@@ -122,18 +122,20 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
     }
 
 
-    file.mv(imagePath, async err => {
-        if (err) {
-            console.log(err)
-            return next(new ErrorHandler('Carga de la imagen falló', 500))
-        }
+    // file.mv(imagePath, async err => {
+    //     if (err) {
+    //         console.log(err)
+    //         return next(new ErrorHandler('Carga de la imagen falló', 500))
+    //     }
 
-        // res.status(200).json({
-        //     success: true,
-        //     message: 'Imagen subida correctamente',
-        //     data: imagePath
-        // })
-    })
+    // res.status(200).json({
+    //     success: true,
+    //     message: 'Imagen subida correctamente',
+    //     data: imagePath
+    // })
+    // })
+
+
 
     // Upload the image to the S3 bucket
     const s3Params = {
@@ -149,7 +151,7 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
         }
 
         // Remove the locally stored image after uploading to S3
-        fs.unlinkSync(imagePath);
+        //fs.unlinkSync(imagePath);
 
         // Respond with success message or other data
         res.status(200).json({
