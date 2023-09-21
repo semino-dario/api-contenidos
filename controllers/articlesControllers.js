@@ -78,7 +78,8 @@ exports.updateArticle = catchAsyncErrors(async (req, res, next) => {
 exports.deleteArticle = catchAsyncErrors(async (req, res, next) => {
 
     let article = await Article.findById(req.params.id);
-    const imageUrl = article.image
+    console.log(article)
+    //const imageUrl = article.image
 
     if (!article) {
         return next(new ErrorHandler('Artículo no encontrado', 404))
