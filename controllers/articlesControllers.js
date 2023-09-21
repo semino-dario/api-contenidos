@@ -90,6 +90,7 @@ exports.deleteArticle = catchAsyncErrors(async (req, res, next) => {
     const imageUrlParts = imageUrl.split("/");
     const objectKey = imageUrlParts[imageUrlParts.length - 1]; // Get the last part of the URL
 
+    console.log(objectKey)
     // Specify the Bucket and Key for the image to delete
     const s3Params = {
         Bucket: "cyclic-lazy-duck-outfit-sa-east-1",
