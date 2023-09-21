@@ -78,31 +78,10 @@ exports.updateArticle = catchAsyncErrors(async (req, res, next) => {
 exports.deleteArticle = catchAsyncErrors(async (req, res, next) => {
 
     let article = await Article.findById(req.params.id);
-    console.log(article)
-    //const imageUrl = article.image
 
     if (!article) {
         return next(new ErrorHandler('Artículo no encontrado', 404))
 
-    }
-    // Parse the URL to extract the object key (file path)
-    const urlParts = imageUrl.split('/');
-    const objectKey = urlParts.slice(3).join('/'); // Remove the protocol and bucket name parts
-    console.log(objectKey)
-    // Delete the object from your S3 bucket
-    const s3Params = {
-        Bucket: 'cyclic-lazy-duck-outfit-sa-east-1', // Replace with your bucket name
-        Key: objectKey, // Use the extracted object key
-    };
-
-
-    // Delete the file from S3
-    try {
-        await s3.deleteObject(s3Params).promise();
-
-    } catch (deleteErr) {
-        console.error("Error deleting file from S3:", deleteErr);
-        // Handle the delete error if needed
     }
 
     article = await Article.findByIdAndDelete(req.params.id);
@@ -110,9 +89,8 @@ exports.deleteArticle = catchAsyncErrors(async (req, res, next) => {
     // Respond with success message or other data
     res.status(200).json({
         success: true,
-        message: "Artículo e imagen eliminados",
-        s3Data: data,
-        imageUrl: imageUrl,
+        message: "Artículo eliminado",
+        data: data,
     });
 
 
