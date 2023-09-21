@@ -104,17 +104,7 @@ exports.deleteArticle = catchAsyncErrors(async (req, res, next) => {
         }
 
         // Delete the article from the database after the image is deleted
-        Article.findByIdAndDelete(req.params.id, (err) => {
-            if (err) {
-                return next(new ErrorHandler('Error deleting article', 500));
-            }
-
-            // Respond with success message or other data
-            res.status(200).json({
-                success: true,
-                message: "Artículo eliminado junto con la imagen",
-            });
-        });
+        Article.findByIdAndDelete(req.params.id);
     });
 
 }
