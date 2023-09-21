@@ -82,33 +82,16 @@ exports.deleteArticle = catchAsyncErrors(async (req, res, next) => {
     if (!article) {
         return next(new ErrorHandler('Artículo no encontrado', 404))
     }
+    Article.findByIdAndDelete(req.params.id);
 
-    // Extract the image URL from the article document
-    const imageUrl = article.image; // Assuming the image URL is stored in the 'image' field
+    res.status(200).json({
+        success: true,
+        message: "Artículo eliminado"
+    })
+});
 
-    // Parse the image URL to extract the object key (path within the S3 bucket)
-    const url = new URL(imageUrl);
-    const objectKey = url.pathname.substring(1); // Remove the leading '/' to get the object key
 
-    // Specify the Bucket and Key for the image to delete
-    const s3Params = {
-        Bucket: "cyclic-lazy-duck-outfit-sa-east-1",
-        Key: objectKey,
-    };
 
-    // Delete the image from the S3 bucket
-    s3.deleteObject(s3Params, (err, data) => {
-        if (err) {
-            console.error("Error deleting image from S3:", err);
-            return next(new ErrorHandler("Failed to delete image from S3", 500));
-        }
-
-        // Delete the article from the database after the image is deleted
-        Article.findByIdAndDelete(req.params.id);
-    });
-
-}
-)
 
 // Upload image /api/v1/articule/image
 
@@ -160,15 +143,12 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
             return next(new ErrorHandler("Failed to upload image to S3", 500));
         }
 
-
-
         // Respond with success message or other data
         res.status(200).json({
             success: true,
             message: "Image uploaded and stored in S3",
             s3Data: data,
             imageUrl: imageUrl,
-            objectKey: objectKey
         });
     });
 
