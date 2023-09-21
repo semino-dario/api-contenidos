@@ -82,12 +82,16 @@ exports.deleteArticle = catchAsyncErrors(async (req, res, next) => {
     if (!article) {
         return next(new ErrorHandler('Artículo no encontrado', 404))
     }
-    Article.findByIdAndDelete(req.params.id);
 
+
+    article = await Article.findByIdAndDelete(req.params.id);
+
+    // Respond with success message or other data
     res.status(200).json({
         success: true,
-        message: "Artículo eliminado"
-    })
+        message: "Artículo eliminado",
+        data: data,
+    });
 });
 
 
