@@ -87,10 +87,9 @@ exports.deleteArticle = catchAsyncErrors(async (req, res, next) => {
     const imageUrl = article.image; // Assuming the image URL is stored in the 'image' field
 
     // Parse the image URL to extract the object key (path within the S3 bucket)
-    const imageUrlParts = imageUrl.split("/");
-    const objectKey = imageUrlParts[imageUrlParts.length - 1]; // Get the last part of the URL
+    const url = new URL(imageUrl);
+    const objectKey = url.pathname.substring(1); // Remove the leading '/' to get the object key
 
-    console.log(objectKey)
     // Specify the Bucket and Key for the image to delete
     const s3Params = {
         Bucket: "cyclic-lazy-duck-outfit-sa-east-1",
@@ -158,8 +157,6 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
         Key: objectKey,
     });
 
-    console.log("Image URL:", imageUrl);
-
     // Upload the image to the S3 bucket
     const s3Params = {
         Body: file.data, // Use file.data to get the file content
@@ -180,7 +177,8 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
             success: true,
             message: "Image uploaded and stored in S3",
             s3Data: data,
-            imageUrl: imageUrl
+            imageUrl: imageUrl,
+            objectKey: objectKey
         });
     });
 
