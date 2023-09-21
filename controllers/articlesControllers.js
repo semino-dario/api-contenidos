@@ -90,9 +90,6 @@ exports.deleteArticle = catchAsyncErrors(async (req, res, next) => {
     const imageUrlParts = imageUrl.split("/");
     const objectKey = imageUrlParts[imageUrlParts.length - 1]; // Get the last part of the URL
 
-    // Initialize AWS S3 client
-    const s3 = new AWS.S3();
-
     // Specify the Bucket and Key for the image to delete
     const s3Params = {
         Bucket: "cyclic-lazy-duck-outfit-sa-east-1",
@@ -119,15 +116,6 @@ exports.deleteArticle = catchAsyncErrors(async (req, res, next) => {
             });
         });
     });
-
-    // article = await Article.findByIdAndDelete(req.params.id);
-
-    // // Respond with success message or other data
-    // res.status(200).json({
-    //     success: true,
-    //     message: "Artículo eliminado",
-    //     data: data,
-    // });
 
 }
 )
