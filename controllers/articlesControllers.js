@@ -125,7 +125,7 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
     }
 
     // Specify your bucket name and object key
-    const bucketName = "cyclic-lazy-duck-outfit-sa-east-1";
+    const bucketName = "contenedor-imagenes";
     const objectKey = `images/${file.name}`; // Adjust the key as per your object's location
 
     // Generate the URL for the image
@@ -137,7 +137,7 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
     // Upload the image to the S3 bucket
     const s3Params = {
         Body: file.data, // Use file.data to get the file content
-        Bucket: "cyclic-lazy-duck-outfit-sa-east-1",
+        Bucket: bucketName,
         Key: `images/${file.name}`, // Specify the desired path in your S3 bucket
     };
 
@@ -159,3 +159,5 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
 
 
 })
+
+
