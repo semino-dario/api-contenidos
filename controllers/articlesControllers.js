@@ -3,7 +3,8 @@ const Article = require('../models/articles');
 const ErrorHandler = require('../utils/errorHandler');
 const path = require('path');
 const AWS = require("aws-sdk");
-const s3 = new AWS.S3()
+
+
 
 // Get all articles => api/v1/articulos
 
@@ -127,6 +128,13 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
     // Specify your bucket name and object key
     const bucketName = "contenedor-imagenes";
     const objectKey = `images/${file.name}`; // Adjust the key as per your object's location
+
+
+    const s3 = new AWS.S3({
+        accessKeyId: 'AKIA367J3V42SLHLB5XR',
+        secretAccessKey: 'ps57XTa0ruD7mi35SSjanWXZbhO0WqqPpXnn1pnC',
+        region: 'us-east-2',
+    });
 
     // Generate the URL for the image
     const imageUrl = s3.getSignedUrl("getObject", {
