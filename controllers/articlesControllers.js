@@ -95,80 +95,73 @@ exports.deleteArticle = catchAsyncErrors(async (req, res, next) => {
 });
 
 
-
-
 // Upload image /api/v1/articule/image
 
-exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
+// exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
 
-    //Check the files
-    if (!req.files) {
-        return next(new ErrorHandler('Por favor subir una imagen', 400))
-    }
+//     //Check the files
+//     if (!req.files) {
+//         return next(new ErrorHandler('Por favor subir una imagen', 400))
+//     }
 
-    const file = req.files.File;
-    //const imagePath = `${process.env.UPLOAD_PATH}/${file.name}`;
+//     const file = req.files.File;
+//     //const imagePath = `${process.env.UPLOAD_PATH}/${file.name}`;
 
-    console.log(req.files.File)
-    //Check file type
+//     console.log(req.files.File)
+//     //Check file type
 
-    const supportedFiles = /.jpg|.png|.webp/;
+//     const supportedFiles = /.jpg|.png|.webp/;
 
-    if (!supportedFiles.test(path.extname(file.name))) {
-        return next(new ErrorHandler('Por favor subir un archivo de imagen jpg, png o webp', 400))
-    }
+//     if (!supportedFiles.test(path.extname(file.name))) {
+//         return next(new ErrorHandler('Por favor subir un archivo de imagen jpg, png o webp', 400))
+//     }
 
-    //Check document size
-    if (file.size > process.env.MAX_FILE_SIZE) {
-        return next(new ErrorHandler("No se admiten arcivhos mayores a 2MB.", 400))
+//     //Check document size
+//     if (file.size > process.env.MAX_FILE_SIZE) {
+//         return next(new ErrorHandler("No se admiten arcivhos mayores a 2MB.", 400))
 
-    }
+//     }
 
-    // Specify your bucket name and object key
-    const bucketName = "contenedor-imagenes";
-    const objectKey = `images/${file.name}`; // Adjust the key as per your object's location
+//     // Specify your bucket name and object key
+//     const bucketName = "contenedor-imagenes";
+//     const objectKey = `images/${file.name}`; // Adjust the key as per your object's location
 
 
-    const s3 = new AWS.S3({
-<<<<<<< HEAD
+//     const s3 = new AWS.S3({
 
-=======
-        accessKeyId: 'AKIA367J3V42SLHLB5XR',
-        secretAccessKey: 'ps57XTa0ruD7mi35SSjanWXZbhO0WqqPpXnn1pnC',
->>>>>>> 940d4788db15d6dcc338885be284208420acd751
-        region: 'us-east-2',
-    });
 
-    // Generate the URL for the image
-    const imageUrl = s3.getSignedUrl("getObject", {
-        Bucket: bucketName,
-        Key: objectKey,
-    });
+//     });
 
-    // Upload the image to the S3 bucket
-    const s3Params = {
-        Body: file.data, // Use file.data to get the file content
-        Bucket: bucketName,
-        Key: `images/${file.name}`, // Specify the desired path in your S3 bucket
-    };
+//     // Generate the URL for the image
+//     const imageUrl = s3.getSignedUrl("getObject", {
+//         Bucket: bucketName,
+//         Key: objectKey,
+//     });
 
-    s3.putObject(s3Params, (err, data) => {
-        if (err) {
-            console.error("Error uploading to S3:", err);
-            return next(new ErrorHandler("Failed to upload image to S3", 500));
-        }
+//     // Upload the image to the S3 bucket
+//     const s3Params = {
+//         Body: file.data, // Use file.data to get the file content
+//         Bucket: bucketName,
+//         Key: `images/${file.name}`, // Specify the desired path in your S3 bucket
+//     };
 
-        // Respond with success message or other data
-        res.status(200).json({
-            success: true,
-            message: "Image uploaded and stored in S3",
-            s3Data: data,
-            imageUrl: imageUrl,
-        });
-    });
+//     s3.putObject(s3Params, (err, data) => {
+//         if (err) {
+//             console.error("Error uploading to S3:", err);
+//             return next(new ErrorHandler("Failed to upload image to S3", 500));
+//         }
+
+//         // Respond with success message or other data
+//         res.status(200).json({
+//             success: true,
+//             message: "Image uploaded and stored in S3",
+//             s3Data: data,
+//             imageUrl: imageUrl,
+//         });
+//     });
 
 
 
-})
+// })
 
 
