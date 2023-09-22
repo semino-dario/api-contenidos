@@ -130,7 +130,12 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
 
 
     const s3 = new AWS.S3({
+<<<<<<< HEAD
 
+=======
+        accessKeyId: 'AKIA367J3V42SLHLB5XR',
+        secretAccessKey: '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',
+>>>>>>> 940d4788db15d6dcc338885be284208420acd751
         region: 'us-east-2',
     });
 
