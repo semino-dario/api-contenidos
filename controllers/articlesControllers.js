@@ -3,7 +3,8 @@ const Article = require('../models/articles');
 const ErrorHandler = require('../utils/errorHandler');
 const path = require('path');
 const AWS = require("aws-sdk");
-const s3 = new AWS.S3()
+
+
 
 // Get all articles => api/v1/articulos
 
@@ -82,12 +83,15 @@ exports.deleteArticle = catchAsyncErrors(async (req, res, next) => {
     if (!article) {
         return next(new ErrorHandler('Artículo no encontrado', 404))
     }
-    Article.findByIdAndDelete(req.params.id);
 
+
+    article = await Article.findByIdAndDelete(req.params.id);
+
+    // Respond with success message or other data
     res.status(200).json({
         success: true,
-        message: "Artículo eliminado"
-    })
+        message: "Artículo eliminado",
+    });
 });
 
 
@@ -121,8 +125,14 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
     }
 
     // Specify your bucket name and object key
-    const bucketName = "cyclic-lazy-duck-outfit-sa-east-1";
+    const bucketName = "contenedor-imagenes";
     const objectKey = `images/${file.name}`; // Adjust the key as per your object's location
+
+
+    const s3 = new AWS.S3({
+
+        region: 'us-east-2',
+    });
 
     // Generate the URL for the image
     const imageUrl = s3.getSignedUrl("getObject", {
@@ -133,7 +143,7 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
     // Upload the image to the S3 bucket
     const s3Params = {
         Body: file.data, // Use file.data to get the file content
-        Bucket: "cyclic-lazy-duck-outfit-sa-east-1",
+        Bucket: bucketName,
         Key: `images/${file.name}`, // Specify the desired path in your S3 bucket
     };
 
@@ -155,3 +165,5 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
 
 
 })
+
+
