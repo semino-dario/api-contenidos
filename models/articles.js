@@ -18,6 +18,10 @@ const articleSchema = new mongoose.Schema({
         type: String,
         required: [true, ' Por favor subir una imagen.']
     },
+    imageUrl: {
+        type: String
+    },
+
     slug: String,
     tags: {
         type: String,

@@ -5,22 +5,32 @@ const sendToken = require('../utils/jwtToken');
 const sendEmail = require('../utils/sendEmail');
 const crypto = require('crypto');
 
-
-
-
 //Register a new user => /api/v1/register
 
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     const { name, email, password, role } = req.body;
+    try {
+        const user = await User.create({
+            name,
+            email,
+            password,
+            role
+        })
 
-    const user = await User.create({
-        name,
-        email,
-        password,
-        role
-    })
+        sendToken(user, 200, res)
+    }
 
-    sendToken(user, 200, res)
+    catch (error) {
+        const customError = {
+            message: 'Error registering user',
+            originalError: error.message,
+            stack: error.stack,
+        };
+
+        res.status(400).json({
+            error: customError
+        })
+    }
 
 })
 
@@ -61,11 +71,10 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
 
     const user = await User.findOne({ email: req.body.email });
 
-
     //Check user email in database
 
     if (!user) {
-        return next(new ErrorHandler('No hay ningún usuario regitrado con este email', 404))
+        return next(new ErrorHandler('Email no registrado.', 404))
     }
 
     // Get reset token
@@ -75,10 +84,12 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
 
     // Create reset password url 
 
-    const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/password/reset/${resetToken}`;
+    const resetUrl = `${req.protocol}://localhost:3001/new-password/${resetToken}`;
+    //const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/password/reset/${resetToken}`;
 
-    const message = `Your password reset link is as follows: \n\n${resetUrl}\n\n if you have not request this, please ignore it.`
+    const message = `Ingresar al siguiente link para recuperar la contraseña: \n\n${resetUrl}\n\n`
 
+    const link = `\n\n${resetUrl}\n\n`
     try {
         await sendEmail({
 
@@ -89,7 +100,8 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
 
         res.status(200).json({
             success: true,
-            message: `Email sent successfully to ${user.email}`
+            message: `Email enviado con éxito a ${user.email}`,
+            link: link
         })
     }
 

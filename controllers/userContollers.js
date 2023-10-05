@@ -6,14 +6,27 @@ const sendToken = require('../utils/jwtToken');
 // Get current user profile => /api/v1/me
 
 exports.getUserProfile = catchAsyncErrors(async (req, res, next) => {
+    try {
+        const user = await User.findById(req.user.id)
 
-    const user = await User.findById(req.user.id)
+        res.status(200).json({
+            success: true,
+            data: user
+        })
+    }
+    catch (error) {
+        const customError = {
+            message: 'Error registering user',
+            originalError: error.message,
+            stack: error.stack,
+        };
+        res.status(400).json({
+            error: customError
+
+        })
+    }
 
 
-    res.status(200).json({
-        success: true,
-        data: user
-    })
 
 })
 

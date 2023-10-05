@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Ingrese su email, por favor.'],
         unique: true,
-        validate: [validator.isEmail, 'Por favor ingrese un email válido.']
+        validate: [validator.isEmail, 'Inválido']
     },
     role: {
         type: String,
@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: [true, 'Ingrese una contraseña, por favor.'],
-        minLength: [8, 'La contraseña debe tener un mínimo de 8 caracteres.'],
+        minLength: [8, 'Mínimo de 8 caracteres'],
         select: false
     },
     createdAt: {
