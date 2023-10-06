@@ -157,12 +157,12 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
     const supportedFiles = /.jpg|.jpeg|.png|.webp/;
 
     if (!supportedFiles.test(path.extname(file.name))) {
-        return next(new ErrorHandler('Por favor subir un archivo de imagen jpg, jpeg, png o webp', 400))
+        return next(new ErrorHandler('Sólo archivos jpg, jpeg, png o webp', 400))
     }
 
     //Check document size
     if (file.size > process.env.MAX_FILE_SIZE) {
-        return next(new ErrorHandler("No se admiten arcivhos mayores a 2MB.", 400))
+        return next(new ErrorHandler("Máximo 2MB.", 400))
 
     }
 
