@@ -115,7 +115,7 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
         user.resetPasswordExpire = undefined;
 
         await user.save({ validateBeforeSave: false });
-
+        console.log(`ERROR: ${error}`)
         return next(new ErrorHandler('Email is not sent', 500))
 
     }
