@@ -58,7 +58,7 @@ app.use(limiter);
 
 //Setup cors // Enable access by other domains
 const corsOptions = {
-    origin: "*",
+    origin: 'http://localhost:3001',
     optionsSuccessStatus: 200,
 };
 
