@@ -80,45 +80,47 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
     // Get reset token
     const resetToken = user.getResetPasswordToken();
 
-    console.log(`RESET TOKEN: ${resetToken}`)
     await user.save({ validateBeforeSave: false })
 
     // Create reset password url 
 
     const resetUrl = `${req.protocol}://localhost:3001/new-password/${resetToken}`;
     //const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/password/reset/${resetToken}`;
-    console.log(`RESET URL: ${resetUrl}`)
 
     const message = `Ingresar al siguiente link para recuperar la contraseña: \n\n${resetUrl}\n\n`
 
-    console.log(`RESET message: ${message}`)
-
     const link = `\n\n${resetUrl}\n\n`
-    console.log(`RESET link: ${link}`)
-    try {
-        await sendEmail({
 
-            email: user.email,
-            subject: 'Password recovery',
-            message
-        })
 
-        res.status(200).json({
-            success: true,
-            message: `Email enviado con éxito a ${user.email}`,
-            link: link
-        })
-    }
+    res.status(200).json({
+        success: true,
+        message: `Email enviado con éxito a ${user.email}`,
+        link: link
+    })
 
-    catch (error) {
-        user.resetPasswordToken = undefined;
-        user.resetPasswordExpire = undefined;
+    // try {
+    //     await sendEmail({
 
-        await user.save({ validateBeforeSave: false });
-        console.log(`ERROR: ${error}`)
-        return next(new ErrorHandler('Email is not sent', 500))
+    //         email: user.email,
+    //         subject: 'Password recovery',
+    //         message
+    //     })
 
-    }
+    //     res.status(200).json({
+    //         success: true,
+    //         message: `Email enviado con éxito a ${user.email}`,
+    //         link: link
+    //     })
+    // }
+
+    // catch (error) {
+    //     user.resetPasswordToken = undefined;
+    //     user.resetPasswordExpire = undefined;
+
+    //     await user.save({ validateBeforeSave: false });
+    //     return next(new ErrorHandler('Email is not sent', 500))
+
+    // }
 })
 
 // Reset password => api/v1/password/reset/:token
