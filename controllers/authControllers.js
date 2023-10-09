@@ -80,7 +80,7 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
     // Get reset token
     const resetToken = user.getResetPasswordToken();
 
-    console.log(resetToken)
+    console.log(`RESET TOKEN: ${resetToken}`)
     await user.save({ validateBeforeSave: false })
 
     // Create reset password url 
