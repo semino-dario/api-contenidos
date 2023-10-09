@@ -87,10 +87,14 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
 
     const resetUrl = `${req.protocol}://localhost:3001/new-password/${resetToken}`;
     //const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/password/reset/${resetToken}`;
+    console.log(`RESET URL: ${resetUrl}`)
 
     const message = `Ingresar al siguiente link para recuperar la contraseña: \n\n${resetUrl}\n\n`
 
+    console.log(`RESET message: ${message}`)
+
     const link = `\n\n${resetUrl}\n\n`
+    console.log(`RESET link: ${link}`)
     try {
         await sendEmail({
 
