@@ -14,6 +14,9 @@ const xssClean = require('xss-clean');
 const hpp = require('hpp');
 const cors = require('cors');
 
+// Serve static files from the 'public' directory
+app.use(express.static('public'));
+
 //Setting up config.env file variables
 dotenv.config({ path: './config/config.env' });
 
