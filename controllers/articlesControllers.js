@@ -29,8 +29,12 @@ exports.getArticles = catchAsyncErrors(async (req, res, next) => {
                 };
 
                 const signedUrl = s3.getSignedUrl('getObject', params);
+
+                // Preserve line breaks in the content
+                const formattedContent = article.content.replace(/\n/g, '<br>');
+
                 // Append the signed URL to the article data
-                return { ...article.toObject(), imageUrl: signedUrl };
+                return { ...article.toObject(), imageUrl: signedUrl, content: formattedContent };
             })
         );
 
