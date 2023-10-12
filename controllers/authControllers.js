@@ -84,8 +84,8 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
 
     // Create reset password url 
 
-    //const resetUrl = `${process.env.FRONT_URL}/new-password/${resetToken}`;
-    const resetUrl = `http://localhost:3001/new-password/${resetToken}`;
+    const resetUrl = `${process.env.FRONT_URL}/new-password/${resetToken}`;
+    //const resetUrl = `http://localhost:3001/new-password/${resetToken}`;
 
     //const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/password/reset/${resetToken}`;
 
