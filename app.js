@@ -61,7 +61,7 @@ app.use(limiter);
 
 //Setup cors // Enable access by other domains
 const corsOptions = {
-    origin: ['http://localhost:3001', 'https://taupe-croquembouche-40c119.netlify.app'],
+    origin: ['http://localhost:3001', 'https://gerontovida-muestra.netlify.app'],
     optionsSuccessStatus: 200,
 };
 
