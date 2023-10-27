@@ -63,7 +63,6 @@ exports.newArticle = catchAsyncErrors(async (req, res, next) => {
         data: article
     })
 
-    // TO BE ADDED IN THE FUTURE: functionality to upload a file wtith the image of the article
 })
 
 // Get a single article by ID and slug api/v1/articulo/:id/:slug

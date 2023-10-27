@@ -61,25 +61,23 @@ app.use(limiter);
 
 //Setup cors // Enable access by other domains
 const corsOptions = {
-    origin: ['http://localhost:3001', 'https://gerontovida-muestra.netlify.app'],
+    // origin: ['http://localhost:3001', 'https://gerontovida-muestra.netlify.app'],
+    origin: '*',
     optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
-// app.use(cors({
-//     origin: 'http://localhost:3000',
-//     methods: 'GET,POST,PUT,DELETE',
-//     credentials: true,
-// }));
+
 //Importing routes
 const articulos = require('./routes/articles');
+const canasta = require('./routes/canasta');
 const auth = require('./routes/auth');
 const user = require('./routes/user');
 
 app.use('/api/v1', articulos);
+app.use('/api/v1', canasta)
 app.use('/api/v1', auth);
 app.use('/api/v1', user);
-
 
 // Handle unhandled routes
 app.all('*', (req, res, next) => {

@@ -157,6 +157,9 @@ exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
 // Logout user => /api/v1/logout
 
 exports.logout = catchAsyncErrors(async (req, res, next) => {
+
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+
     res.cookie('token', 'none', {
         expires: new Date(Date.now()),
         httpOnly: true
