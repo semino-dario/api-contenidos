@@ -3,14 +3,14 @@ const Article = require('../models/articles');
 const ErrorHandler = require('../utils/errorHandler');
 const path = require('path');
 const AWS = require("aws-sdk");
-const bucketName = "contenedor-imagenes";
-const s3 = new AWS.S3({
-    accessKeyId: process.env.CLAVE_AWS,
-    secretAccessKey: process.env.CLAVE_AWS_SECRETA,
-    region: process.env.BUCKET_REGION,
+const bucketName = process.env.BUCKET;
+// const s3 = new AWS.S3({
+//     accessKeyId: process.env.CLAVE_AWS,
+//     secretAccessKey: process.env.CLAVE_AWS_SECRETA,
+//     region: process.env.BUCKET_REGION,
 
-});
-
+// });
+const s3 = new AWS.S3
 // Get all articles => api/v1/articulos
 
 exports.getArticles = catchAsyncErrors(async (req, res, next) => {
