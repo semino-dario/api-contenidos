@@ -60,9 +60,12 @@ const limiter = rateLimit({
 app.use(limiter);
 
 //Setup cors // Enable access by other domains
+const LOCAL = process.env.LOCAL_URL
+const FRONT = process.env.FRONT_URL
+
 const corsOptions = {
-    // origin: ['http://localhost:3001', 'https://gerontovida-muestra.netlify.app'],
-    origin: '*',
+    origin: [LOCAL, FRONT],
+    // origin: '*',
     optionsSuccessStatus: 200,
 };
 
