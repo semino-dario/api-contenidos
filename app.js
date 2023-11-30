@@ -62,9 +62,10 @@ app.use(limiter);
 //Setup cors // Enable access by other domains
 const LOCAL = process.env.LOCAL_URL
 const FRONT = process.env.FRONT_URL
+const GERONTO = process.env.GERONTO_URL
 
 const corsOptions = {
-    origin: [LOCAL, FRONT],
+    origin: [LOCAL, FRONT, GERONTO],
     // origin: '*',
     optionsSuccessStatus: 200,
 };
