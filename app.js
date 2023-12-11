@@ -11,8 +11,8 @@ const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xssClean = require('xss-clean');
-const hpp = require('hpp');
 const cors = require('cors');
+const hpp = require('hpp');
 
 // Serve static files from the 'public' directory
 app.use(express.static('public'));
