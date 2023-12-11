@@ -66,8 +66,8 @@ const GERONTO = process.env.GERONTO_URL // Gerontovida site
 const LOCAL_DASHBOARD = process.env.LOCAL_DASHBOARD // Dasboard local
 
 const corsOptions = {
-    origin: [FRONT, GERONTO, LOCAL_DASHBOARD],
-    // origin: '*',
+    //origin: [FRONT, GERONTO, LOCAL_DASHBOARD],
+    origin: '*',
     optionsSuccessStatus: 200,
 };
 
