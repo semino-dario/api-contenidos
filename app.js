@@ -63,9 +63,10 @@ app.use(limiter);
 const LOCAL = process.env.LOCAL_URL //Localhost
 const FRONT = process.env.FRONT_URL // Netlifly
 const GERONTO = process.env.GERONTO_URL // Gerontovida site
+const LOCAL_DASHBOARD = process.env.LOCAL_DASHBOARD // Dasboard local
 
 const corsOptions = {
-    origin: [LOCAL, FRONT, GERONTO],
+    origin: [LOCAL, FRONT, GERONTO, LOCAL_DASHBOARD],
     // origin: '*',
     optionsSuccessStatus: 200,
 };
