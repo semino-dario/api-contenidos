@@ -49,6 +49,9 @@ const canastaSchema = new mongoose.Schema({
         medicamentos: {
             type: Number,
             required: [true, 'Complertar medicamentos']
+        },
+        farmacia: {
+            type: Number,
         }
     },
     pdf: {
