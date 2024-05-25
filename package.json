@@ -2,11 +2,10 @@
   "name": "api-contenidos",
   "version": "1.0.0",
   "description": "\"This api handles different kinds of written contents\"",
-  "main": "functions/app.js",
+  "main": "app.js",
   "scripts": {
     "dev": "nodemon app",
-    "build": "netlify deploy --prod",
-    "start": "node functions/app.js"
+    "start": "SET NODE_ENV=production & node app.js"
   },
   "author": "Darío Semino",
   "license": "ISC",

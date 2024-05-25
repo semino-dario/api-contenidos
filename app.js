@@ -1,9 +1,9 @@
 const express = require('express');
 const dotenv = require('dotenv')
 const app = express();
-const connectDB = require('../config/db')
-const errorMiddleware = require('../middlewares/errorMiddleware')
-const ErrorHandler = require('../utils/errorHandler')
+const connectDB = require('./config/db')
+const errorMiddleware = require('./middlewares/errorMiddleware')
+const ErrorHandler = require('./utils/errorHandler')
 const cookieParser = require('cookie-parser')
 const fileUpload = require('express-fileupload')
 //Securty mesures
@@ -13,7 +13,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xssClean = require('xss-clean');
 const cors = require('cors');
 const hpp = require('hpp');
-const serverless = require('serverless-http')
+// const serverless = require('serverless-http')
 
 
 // Serve static files from the 'public' directory
@@ -95,10 +95,10 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 //Importing routes
-const articulos = require('../routes/articles');
-const canasta = require('../routes/canasta');
-const auth = require('../routes/auth');
-const user = require('../routes/user');
+const articulos = require('./routes/articles');
+const canasta = require('./routes/canasta');
+const auth = require('./routes/auth');
+const user = require('./routes/user');
 
 app.use('/api/v1', articulos);
 app.use('/api/v1', canasta)
@@ -131,9 +131,9 @@ process.on('unhandledRejection', err => {
     })
 });
 
-const router = express.Router()
+// const router = express.Router()
 
-router.get("api-contenidos", function (req, res) { res.json(getApiContenidos()) })
-app.use('/.netlify/functions/app', router)
-module.exports.handler = serverless(app)
-// "start": "SET NODE_ENV=production & node app.js",
+// router.get("api-contenidos", function (req, res) { res.json(getApiContenidos()) })
+// app.use('/.netlify/functions/app', router)
+// module.exports.handler = serverless(app)
+//     "build": "netlify deploy --prod",
