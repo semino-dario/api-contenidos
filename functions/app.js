@@ -1,9 +1,9 @@
 const express = require('express');
 const dotenv = require('dotenv')
 const app = express();
-const connectDB = require('./config/db')
-const errorMiddleware = require('./middlewares/errorMiddleware')
-const ErrorHandler = require('./utils/errorHandler')
+const connectDB = require('../config/db')
+const errorMiddleware = require('../middlewares/errorMiddleware')
+const ErrorHandler = require('../utils/errorHandler')
 const cookieParser = require('cookie-parser')
 const fileUpload = require('express-fileupload')
 //Securty mesures
@@ -13,12 +13,15 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xssClean = require('xss-clean');
 const cors = require('cors');
 const hpp = require('hpp');
+const serverless = require('serverless-http')
+
 
 // Serve static files from the 'public' directory
 app.use(express.static('public'));
 
 //Setting up config.env file variables
 dotenv.config({ path: './config/config.env' });
+
 
 //Handlling uncaught exception
 process.on('uncaughtException', err => {
@@ -51,13 +54,31 @@ app.use(xssClean());
 //Prevent parameter pollution
 app.use(hpp());
 
-//Limite rate of request
+// Limite rate of request
 const limiter = rateLimit({
-    windows: 10 * 60 * 1000, //10 mins
+    window: 10 * 60 * 1000, //10 mins
     max: 100
 })
 
 app.use(limiter);
+
+// app.set('trust proxy', 1);
+
+// Limite la tasa de solicitudes
+// const limiter = rateLimit({
+//     windowMs: 10 * 60 * 1000, // 10 minutos
+//     max: 100,
+//     keyGenerator: function (req /*, res */) {
+//         return req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
+//     },
+//     handler: function (req, res /*, next */) {
+//         res.status(429).json({
+//             error: 'Too many requests, please try again later.'
+//         });
+//     }
+// });
+
+// app.use(limiter);
 
 //Setup cors // Enable access by other domains
 const LOCAL = process.env.LOCAL_URL //Localhost
@@ -74,10 +95,10 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 //Importing routes
-const articulos = require('./routes/articles');
-const canasta = require('./routes/canasta');
-const auth = require('./routes/auth');
-const user = require('./routes/user');
+const articulos = require('../routes/articles');
+const canasta = require('../routes/canasta');
+const auth = require('../routes/auth');
+const user = require('../routes/user');
 
 app.use('/api/v1', articulos);
 app.use('/api/v1', canasta)
@@ -109,3 +130,10 @@ process.on('unhandledRejection', err => {
         process.exit(1);
     })
 });
+
+const router = express.Router()
+
+router.get("api-contenidos", function (req, res) { res.json(getApiContenidos()) })
+app.use('/.netlify/functions/app', router)
+module.exports.handler = serverless(app)
+// "start": "SET NODE_ENV=production & node app.js",
