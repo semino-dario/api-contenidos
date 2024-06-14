@@ -177,8 +177,7 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
     res.status(200).json({
         success: true,
         message: "Image uploaded and stored",
-        s3Data: data,
-        imageUrl: imageUrl,
+        imageUrl: "",
         objectKey: objectKey
     });
     ;
