@@ -1,3 +1,4 @@
+const { execPath } = require('process');
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 const Article = require('../models/articles');
 const ErrorHandler = require('../utils/errorHandler');
@@ -20,14 +21,7 @@ exports.getArticles = catchAsyncErrors(async (req, res, next) => {
             articles.map((article) => {
                 // Fetch the object URL from S3 using the object key stored in the database
                 const objectKey = article.image;
-                // const params = {
-                //     Bucket: bucketName,
-                //     Key: objectKey,
-                // };
 
-                // const signedUrl = s3.getSignedUrl('getObject', params);
-
-                // Preserve line breaks in the content
                 const formattedContent = article.content.replace(/\n/g, '<br>');
 
                 // Append the signed URL to the article data
@@ -113,17 +107,6 @@ exports.deleteArticle = catchAsyncErrors(async (req, res, next) => {
             return next(new ErrorHandler('Artículo no encontrado', 404))
         }
 
-        // Delete the image from the S3 bucket using the object key stored in the article
-        const objectKey = article.image;
-
-        // const deleteParams = {
-        //     Bucket: bucketName,
-        //     Key: objectKey,
-        // };
-
-        // Delete the object from S3
-        // await s3.deleteObject(deleteParams).promise();
-
         article = await Article.findByIdAndDelete(req.params.id);
 
         // Respond with success message or other data
@@ -164,23 +147,51 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
 
     }
 
-    const objectKey = `./public/images/${file.name}`;
+    // Ruta temporal en la carpeta public/images para guardar el archivo
+    const publicImagesPath = path.join(__dirname, '..', 'public', 'images');
+    const tempFilePath = path.join(publicImagesPath, file.name);
+
+    // Mover el archivo a la carpeta public/images
+    await file.mv(tempFilePath);
+
+    try {
+        // Subir el archivo a Cloudinary
+        const uploadResult = await cloudinary.uploader.upload(tempFilePath);
+
+        // Eliminar el archivo temporal después de subirlo
+        await unlinkAsync(tempFilePath);
+
+        // Responder con un mensaje de éxito
+        res.status(200).json({
+            success: true,
+            message: "Image uploaded and stored",
+            imageUrl: uploadResult.secure_url,
+            objectKey: file.name
+        });
+    } catch (error) {
+        // Eliminar el archivo temporal si hubo un error
+        await unlinkAsync(tempFilePath);
+        console.error('Error al subir la imagen a Cloudinary:', error);
+        return next(new ErrorHandler('Error al subir la imagen a Cloudinary', 500));
+    }
 
 
-    const uploadResult = await cloudinary.uploader.upload(objectKey, {
-        public_id: file.name
-    }).catch((error) => { console.log(error) });
 
-    console.log(uploadResult);
 
-    // Respond with success message or other data
-    res.status(200).json({
-        success: true,
-        message: "Image uploaded and stored",
-        imageUrl: uploadResult,
-        objectKey: objectKey
-    });
-    ;
+    // const path = `./public/images/${file.name}`;
+
+
+    // const uploadResult = await cloudinary.uploader.upload(path).catch((error) => { console.log(error) });
+
+    // console.log(uploadResult);
+
+    // // Respond with success message or other data
+    // res.status(200).json({
+    //     success: true,
+    //     message: "Image uploaded and stored",
+    //     imageUrl: uploadResult.url,
+    // });
+    // ;
 
 
 
