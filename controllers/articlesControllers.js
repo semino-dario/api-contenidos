@@ -164,10 +164,10 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
 
     }
 
-    const objectKey = `${file.name}`;
+    const objectKey = `./public/images/${file.name}`;
 
 
-    const uploadResult = await cloudinary.uploader.upload(`${objectKey}`, {
+    const uploadResult = await cloudinary.uploader.upload(objectKey, {
         public_id: file.name
     }).catch((error) => { console.log(error) });
 
@@ -177,7 +177,7 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
     res.status(200).json({
         success: true,
         message: "Image uploaded and stored",
-        imageUrl: "",
+        imageUrl: uploadResult.secure_url,
         objectKey: objectKey
     });
     ;
