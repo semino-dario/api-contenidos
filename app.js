@@ -13,6 +13,14 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xssClean = require('xss-clean');
 const cors = require('cors');
 const hpp = require('hpp');
+const cloudinary = require('cloudinary').v2;
+
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET // 
+});
+
 // const serverless = require('serverless-http')
 
 
@@ -62,23 +70,6 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-// app.set('trust proxy', 1);
-
-// Limite la tasa de solicitudes
-// const limiter = rateLimit({
-//     windowMs: 10 * 60 * 1000, // 10 minutos
-//     max: 100,
-//     keyGenerator: function (req /*, res */) {
-//         return req.headers['x-forwarded-for'] || req.connection.remoteAddress || req.socket.remoteAddress || req.connection.socket.remoteAddress;
-//     },
-//     handler: function (req, res /*, next */) {
-//         res.status(429).json({
-//             error: 'Too many requests, please try again later.'
-//         });
-//     }
-// });
-
-// app.use(limiter);
 
 //Setup cors // Enable access by other domains
 const LOCAL = process.env.LOCAL_URL //Localhost
@@ -131,9 +122,4 @@ process.on('unhandledRejection', err => {
     })
 });
 
-// const router = express.Router()
 
-// router.get("api-contenidos", function (req, res) { res.json(getApiContenidos()) })
-// app.use('/.netlify/functions/app', router)
-// module.exports.handler = serverless(app)
-//     "build": "netlify deploy --prod",
