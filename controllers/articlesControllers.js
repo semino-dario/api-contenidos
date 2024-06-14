@@ -4,7 +4,11 @@ const ErrorHandler = require('../utils/errorHandler');
 const path = require('path');
 const cloudinary = require('cloudinary').v2;
 
-
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET // 
+});
 
 exports.getArticles = catchAsyncErrors(async (req, res, next) => {
 
@@ -160,34 +164,14 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
 
     }
 
-    // Specify your bucket name and object key
-    const objectKey = `images/${file.name}`;
+    const objectKey = `${file.name}`;
 
 
-    const uploadResult = await cloudinary.uploader.upload(`https://res.cloudinary.com/demo/image/upload/${objectKey}`, {
+    const uploadResult = await cloudinary.uploader.upload(`${objectKey}`, {
         public_id: file.name
     }).catch((error) => { console.log(error) });
 
     console.log(uploadResult);
-
-    // Generate the URL for the image
-    // const imageUrl = s3.getSignedUrl("getObject", {
-    //     Bucket: bucketName,
-    //     Key: objectKey,
-    // });
-
-    // // Upload the image to the S3 bucket
-    // const s3Params = {
-    //     Body: file.data, // Use file.data to get the file content
-    //     Bucket: bucketName,
-    //     Key: `images/${file.name}`, // Specify the desired path in your S3 bucket
-    // };
-
-    // s3.putObject(s3Params, (err, data) => {
-    //     if (err) {
-    //         console.error("Error uploading to S3:", err);
-    //         return next(new ErrorHandler("Failed to upload image to S3", 500));
-    //     }
 
     // Respond with success message or other data
     res.status(200).json({

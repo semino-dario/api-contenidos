@@ -13,13 +13,8 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xssClean = require('xss-clean');
 const cors = require('cors');
 const hpp = require('hpp');
-const cloudinary = require('cloudinary').v2;
 
-cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret: process.env.API_SECRET // 
-});
+
 
 // const serverless = require('serverless-http')
 
