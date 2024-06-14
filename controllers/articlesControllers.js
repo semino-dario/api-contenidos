@@ -1,4 +1,6 @@
-const { execPath } = require('process');
+const fs = require('fs');
+const { promisify } = require('util');
+const unlinkAsync = promisify(fs.unlink);
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 const Article = require('../models/articles');
 const ErrorHandler = require('../utils/errorHandler');
