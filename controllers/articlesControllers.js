@@ -2,16 +2,13 @@ const catchAsyncErrors = require('../middlewares/catchAsyncErrors');
 const Article = require('../models/articles');
 const ErrorHandler = require('../utils/errorHandler');
 const path = require('path');
-const AWS = require("aws-sdk");
-const bucketName = process.env.BUCKET;
-// const s3 = new AWS.S3({
-//     accessKeyId: process.env.CLAVE_AWS,
-//     secretAccessKey: process.env.CLAVE_AWS_SECRETA,
-//     region: process.env.BUCKET_REGION,
+const cloudinary = require('cloudinary').v2;
 
-// });
-const s3 = new AWS.S3
-// Get all articles => api/v1/articulos
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET // 
+});
 
 exports.getArticles = catchAsyncErrors(async (req, res, next) => {
 
@@ -23,18 +20,18 @@ exports.getArticles = catchAsyncErrors(async (req, res, next) => {
             articles.map((article) => {
                 // Fetch the object URL from S3 using the object key stored in the database
                 const objectKey = article.image;
-                const params = {
-                    Bucket: bucketName,
-                    Key: objectKey,
-                };
+                // const params = {
+                //     Bucket: bucketName,
+                //     Key: objectKey,
+                // };
 
-                const signedUrl = s3.getSignedUrl('getObject', params);
+                // const signedUrl = s3.getSignedUrl('getObject', params);
 
                 // Preserve line breaks in the content
                 const formattedContent = article.content.replace(/\n/g, '<br>');
 
                 // Append the signed URL to the article data
-                return { ...article.toObject(), imageUrl: signedUrl, content: formattedContent };
+                return { ...article.toObject(), imageUrl: objectKey, content: formattedContent };
             })
         );
 
@@ -119,20 +116,20 @@ exports.deleteArticle = catchAsyncErrors(async (req, res, next) => {
         // Delete the image from the S3 bucket using the object key stored in the article
         const objectKey = article.image;
 
-        const deleteParams = {
-            Bucket: bucketName,
-            Key: objectKey,
-        };
+        // const deleteParams = {
+        //     Bucket: bucketName,
+        //     Key: objectKey,
+        // };
 
         // Delete the object from S3
-        await s3.deleteObject(deleteParams).promise();
+        // await s3.deleteObject(deleteParams).promise();
 
         article = await Article.findByIdAndDelete(req.params.id);
 
         // Respond with success message or other data
         res.status(200).json({
             success: true,
-            message: "Artículo e imagen eliminados",
+            message: "Artículo eliminado",
         });
     }
     catch (error) {
@@ -152,10 +149,8 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
     }
 
     const file = req.files.File;
-    //const imagePath = `${process.env.UPLOAD_PATH}/${file.name}`;
 
     console.log(req.files.File)
-    //Check file type
 
     const supportedFiles = /.jpg|.jpeg|.png|.webp/;
 
@@ -173,34 +168,40 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
     const objectKey = `images/${file.name}`;
 
 
+    const uploadResult = await cloudinary.uploader.upload(`https://res.cloudinary.com/demo/image/upload/${objectKey}`, {
+        public_id: file.name
+    }).catch((error) => { console.log(error) });
+
+    console.log(uploadResult);
+
     // Generate the URL for the image
-    const imageUrl = s3.getSignedUrl("getObject", {
-        Bucket: bucketName,
-        Key: objectKey,
+    // const imageUrl = s3.getSignedUrl("getObject", {
+    //     Bucket: bucketName,
+    //     Key: objectKey,
+    // });
+
+    // // Upload the image to the S3 bucket
+    // const s3Params = {
+    //     Body: file.data, // Use file.data to get the file content
+    //     Bucket: bucketName,
+    //     Key: `images/${file.name}`, // Specify the desired path in your S3 bucket
+    // };
+
+    // s3.putObject(s3Params, (err, data) => {
+    //     if (err) {
+    //         console.error("Error uploading to S3:", err);
+    //         return next(new ErrorHandler("Failed to upload image to S3", 500));
+    //     }
+
+    // Respond with success message or other data
+    res.status(200).json({
+        success: true,
+        message: "Image uploaded and stored",
+        s3Data: data,
+        imageUrl: imageUrl,
+        objectKey: objectKey
     });
-
-    // Upload the image to the S3 bucket
-    const s3Params = {
-        Body: file.data, // Use file.data to get the file content
-        Bucket: bucketName,
-        Key: `images/${file.name}`, // Specify the desired path in your S3 bucket
-    };
-
-    s3.putObject(s3Params, (err, data) => {
-        if (err) {
-            console.error("Error uploading to S3:", err);
-            return next(new ErrorHandler("Failed to upload image to S3", 500));
-        }
-
-        // Respond with success message or other data
-        res.status(200).json({
-            success: true,
-            message: "Image uploaded and stored in S3",
-            s3Data: data,
-            imageUrl: imageUrl,
-            objectKey: objectKey
-        });
-    });
+    ;
 
 
 
