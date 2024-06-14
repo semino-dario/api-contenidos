@@ -177,7 +177,7 @@ exports.uploadImage = catchAsyncErrors(async (req, res, next) => {
     res.status(200).json({
         success: true,
         message: "Image uploaded and stored",
-        imageUrl: uploadResult.secure_url,
+        imageUrl: uploadResult,
         objectKey: objectKey
     });
     ;
