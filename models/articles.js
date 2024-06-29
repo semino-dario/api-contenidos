@@ -22,6 +22,9 @@ const articleSchema = new mongoose.Schema({
         type: String
     },
 
+    link: {
+        type: String
+    },
     slug: String,
     tags: {
         type: String,
